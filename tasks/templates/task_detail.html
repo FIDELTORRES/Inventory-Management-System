@@ -1,23 +1,67 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
-   <h1>{{ task.title }}</h1>
+<main class="container my-5">
+   <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+         <div class="card shadow-lg rounded">
+            <div class="card-body p-4 p-md-5">
 
-   {{error}}
+               <h1 class="card-title h3 text-center mb-4">Edit Task</h1>
 
-   <<form action="{% url 'task_detail' task.id %}" method="POST">
-      {% csrf_token %}
-      {{form.as_p}}
+               {% if error %}
+                  <div class="alert alert-danger" role="alert">
+                     {{ error }}
+                  </div>
+               {% endif %}
 
-      <button type="submit">Update</button>
-   </form>
+               <!-- Formulario Principal de Edición -->
+               <form action="{% url 'task_detail' task.id %}" method="POST">
+                  {% csrf_token %}
 
-   <form action="{% url 'complete_task' task.id %}" method="POST">
-      {% csrf_token %}
-      <button type="submit" name="delete">Complete</button>
-   </form>
-   <form action="{% url 'delete_task' task.id %}" method="POST">
-      {% csrf_token %}
-      <button type="submit" name="delete">Delete</button>
+                  {% for field in form %}
+                     {% if field.name == 'important' %}
+                        <!-- Renderizado para Checkbox -->
+                        <div class="form-check mb-4">
+                           {{ field }}
+                           <label class="form-check-label fw-semibold text-secondary" for="{{ field.id_for_label }}">
+                              {{ field.label }}
+                           </label>
+                        </div>
+                     {% else %}
+                        <!-- Renderizado para Inputs y Textarea -->
+                        <div class="mb-3">
+                           <label class="form-label fw-semibold text-secondary" for="{{ field.id_for_label }}">
+                              {{ field.label }}
+                           </label>
+                           {{ field }}
+                        </div>
+                     {% endif %}
+                  {% endfor %}
 
+                  <div class="d-grid mt-4">
+                     <button type="submit" class="btn btn-primary btn-lg fs-6 fw-semibold">Update Task</button>
+                  </div>
+               </form>
+
+               <hr class="my-4">
+
+               <!-- Botones de Acción: Complete y Delete -->
+               <div class="d-flex gap-2">
+                  <form action="{% url 'complete_task' task.id %}" method="POST" class="w-50">
+                     {% csrf_token %}
+                     <button type="submit" class="btn btn-success w-100 fw-semibold">Complete</button>
+                  </form>
+
+                  <form action="{% url 'delete_task' task.id %}" method="POST" class="w-50">
+                     {% csrf_token %}
+                     <button type="submit" class="btn btn-danger w-100 fw-semibold">Delete</button>
+                  </form>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+</main>
 {% endblock %}

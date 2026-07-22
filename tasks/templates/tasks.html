@@ -1,25 +1,68 @@
 {% extends "base.html" %}
 
 {% block content %}
-   <h1>page tasks Pending</h1>
+<main class="container my-5">
+   <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+         
+         <!-- Encabezado -->
+         <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 fw-bold mb-0">Pending Tasks</h1>
+            <span class="badge bg-primary rounded-pill">{{ tasks|length }} tasks</span>
+         </div>
 
-   <ul>
-      
-      {% for task in tasks %}
-         <li>
-            <a href="{% url 'task_detail' task.id %}">{{ task.title }}
-               {% if task.important %}
-                  <strong>{{ task.title }}</strong>
-               {% else %}
-                  {{ task.title }}
-               {% endif %}
-        
-               <p>{{ task.description }}</p>
-               <p>{{ task.user.username }}</p>
-               <p>{{ task.datecompleted | date:"Y-m-d" }}</p>
-            </a>
-         </li>
-      {% endfor %}
-   </ul>
+         <!-- Lista de Tareas -->
+         {% if tasks %}
+            <div class="list-group shadow-sm rounded">
+               {% for task in tasks %}
+                  <a href="{% url 'task_detail' task.id %}" class="list-group-item list-group-item-action p-3">
+                     
+                     <!-- Título y Badges -->
+                     <div class="d-flex w-100 justify-content-between align-items-start mb-2">
+                        <h5 class="mb-1 text-dark">
+                           {% if task.important %}
+                              <strong class="text-danger">★ {{ task.title }}</strong>
+                           {% else %}
+                              {{ task.title }}
+                           {% endif %}
+                        </h5>
+                        
+                        {% if task.important %}
+                           <span class="badge bg-danger">Important</span>
+                        {% endif %}
+                     </div>
 
+                     <!-- Descripción -->
+                     {% if task.description %}
+                        <p class="mb-2 text-secondary small">{{ task.description|truncatewords:20 }}</p>
+                     {% endif %}
+
+                     <!-- Metadatos (Usuario y Fecha) -->
+                     <div class="d-flex justify-content-between align-items-center pt-2 border-top border-light">
+                        <small class="text-muted">
+                           <strong>User:</strong> {{ task.user.username }}
+                        </small>
+                        
+                        {% if task.datecompleted %}
+                           <small class="text-muted">
+                              <strong>Completed:</strong> {{ task.datecompleted|date:"Y-m-d" }}
+                           </small>
+                        {% endif %}
+                     </div>
+
+                  </a>
+               {% endfor %}
+            </div>
+         {% else %}
+            <!-- Estado vacío por si no hay tareas -->
+            <div class="card text-center p-5 shadow-sm">
+               <div class="card-body">
+                  <p class="text-muted mb-0">No pending tasks available.</p>
+               </div>
+            </div>
+         {% endif %}
+
+      </div>
+   </div>
+</main>
 {% endblock %}
