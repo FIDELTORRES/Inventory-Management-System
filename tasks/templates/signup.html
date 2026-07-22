@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<main class="container mt-5">
+   {{ error }}
+   <form action="/signup/" method="POST" 
+      class=" card card-body p-4 
+               shadow-lg rounded" 
+      style="max-width: 400px; margin: 0 auto; margin-top: 50px;">
+
+      <h1>Sign Up</h1>
+
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <button type="submit">Sign Up</button>
+
+   </form>
+</main>    
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+   <h1>Create Task</h1>
+   {% if form.errors %}
+      <p style="color: red;">Please correct the errors below.</p>
+   {% endif %}
+   <form action="/tasks/create/" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Create Task</button>
+   </form>
+   
+{% endblock %}
